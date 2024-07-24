@@ -7,6 +7,7 @@ import LogIn from "./Login.tsx";
 import LoadingScreen from "./LoadingScreen.tsx";
 import Game from "./Game.tsx";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     path: "/game",
     element: <Game />,
   },
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

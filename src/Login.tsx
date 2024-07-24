@@ -70,7 +70,7 @@ function Login() {
                   name="username"
                   render={({ field }) => (
                     <FormItem className="flex flex-col space-y-2">
-                      <FormLabel className="text-left">Username</FormLabel>
+                      <FormLabel className="text-left my-2 text-xl font-bold">Insert your name</FormLabel>
                       <div className="flex items-center space-x-4">
                         <FormControl className="flex-grow">
                           <Input placeholder="Username" {...field} />
