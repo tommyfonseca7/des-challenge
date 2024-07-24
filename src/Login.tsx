@@ -1,20 +1,13 @@
-import { Input } from "./components/ui/input"
-
+import { ProfileForm } from "./LoginForm"
 function Login() {
   return (
     <>
-      <div className="w-full fixed top-0 left-0 bg-white shadow-md text-teal-500 p-4">
-        <h1 className="text-xl font-bold">Stock Market Simulator</h1>
+      <div className="w-full fixed top-0 left-0 bg-white shadow-md text-green-500 p-5">
+        <h1 className="text-xl font-bold text-left">🤑 Stock Master</h1>
       </div>
-
-      <div className="fixed top-20">
-        <Input type="username" placeholder="Username"></Input>
+      <div className="flex justify-center mt-10">
+        <ProfileForm />
       </div>
-
-
-
-
-
     </>
   )
 }

@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LogIn from "./Login.tsx"
+import Game from "./Game.tsx"
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/game",
-    element: <App />
+    element: <Game />
   }
 ]);
 
