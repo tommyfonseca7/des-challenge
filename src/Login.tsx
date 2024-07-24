@@ -58,7 +58,7 @@ function Login() {
         </div>
 
         {/* Right half of the screen */}
-        <div className="w-1/2 flex items-center justify-center">
+        <div className="w-1/2 flex items-center justify-center shadow-lg shadow-slate-gray">
           <div className="w-full max-w-lg p-8 space-y-6">
             <Form {...form}>
               <form
