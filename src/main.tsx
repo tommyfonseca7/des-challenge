@@ -4,10 +4,15 @@ import App from './App.tsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LogIn from "./Login.tsx"
+import LoadingScreen from './LoadingScreen.tsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LoadingScreen />
+  },
+  {
+    path: "/login",
     element: <LogIn />
   },
   {
