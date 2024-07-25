@@ -42,6 +42,7 @@ function Login() {
         title: "You should be redirected to the Game Page",
         description: "🙃",
       });
+      
     }
   }
 
@@ -51,7 +52,7 @@ function Login() {
         {/* Left half of the screen */}
         <div className="w-1/2 bg-space-cadet flex items-center justify-center">
           <img
-            src=".\src\assets\image.png"
+            src=".\src\assets\logo-dark-bg.png"
             alt="Logo"
             className="w-1/2 h-auto"
           />
