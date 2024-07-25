@@ -1,5 +1,3 @@
-import React from "react";
-
 const GamePage = () => {
   return (
     <div className="flex h-screen">
@@ -15,7 +13,7 @@ const GamePage = () => {
             />
             <div className="ml-10">
               <span className="text-lg font-bold block">Welcome, username</span>
-              <a href="#" className="text-blue-500 underline block">
+              <a href="/" className="text-sky-blue underline block">
                 Leave the Game
               </a>
             </div>
