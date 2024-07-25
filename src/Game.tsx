@@ -34,7 +34,6 @@ const GamePage = () => {
         <div className="flex-grow flex flex-col">
           {/* Remaining space */}
           <div className="flex-grow flex items-center justify-center">
-            <StockTable />
           </div>
         </div>
 
