@@ -141,11 +141,9 @@ const GamePage = () => {
       </header>
 
       {/* Main content with leaderboard */}
-      <div className="flex flex-grow">
-        {/* Main content */}
-        <div style={{width:"85%"}} className="flex-grow flex mt-4 ml-5">
-          <StockTable stocks={stockData}/>
-        </div>
+      <div className="flex-grow flex mt-15 ml-5" style={{ width: "85%" }}>
+        <StockTable stocks={stockData} />
+ 
 
         {/* Leaderboard */}
         <aside style={{ width: "15%", height: "75vh" }} className="bg-misty-rose p-4 text-black mt-4 mr-4 rounded-2xl border-4 border border-misty-rose overflow-y-auto">

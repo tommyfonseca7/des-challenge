@@ -36,7 +36,7 @@ function StockTable({stocks}) {
 };
 
   return (
-    <div className="flex justify-center items-center h-full w-full overflow-x-auto">
+    <div className="flex justify-center items-center h-full w-full overflow-y-auto">
       <Table className="min-w-full">
         <TableCaption></TableCaption>
         <TableHeader>
