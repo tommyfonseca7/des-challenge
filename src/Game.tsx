@@ -1,22 +1,34 @@
-import { useEffect, useState } from "react";
+// GamePage.tsx
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import StockTable from "./components/ui/StockTable";
-import Leaderboard from "./components/ui/Leaderboard";
+import useWebSocket from "react-use-websocket";
+import StockTable from "./components/ui/StockTable"; // Adjust the import path as needed
+import Leaderboard from "./components/ui/Leaderboard"; // Adjust the import path as needed
 
-const GamePage = () => {
+interface UserData {
+  name: string;
+  netWorth: number;
+}
+
+interface Stock {
+  symbol: string;
+  company: string;
+  description: string;
+  price: number;
+}
+
+const GamePage: React.FC = () => {
   const location = useLocation();
-  const userData = location.state?.userData;
+  const userData = location.state?.userData as UserData;
 
-  const [round, setRound] = useState("--");
-  const [gameStarted, setGameStarted] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(10);
-  const [nextGameCountdown, setNextGameCountdown] = useState<number | null>(
-    null
-  );
-  const [gameOngoingMessage, setGameOngoingMessage] = useState(false);
-  const [gameEnded, setGameEnded] = useState(false);
-  const [stockData, setStockData] = useState([]);
+  const [round, setRound] = useState<string>("--");
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [timeRemaining, setTimeRemaining] = useState<number>(10);
+  const [nextGameCountdown, setNextGameCountdown] = useState<number | null>(null);
+  const [gameOngoingMessage, setGameOngoingMessage] = useState<boolean>(false);
+  const [gameEnded, setGameEnded] = useState<boolean>(false);
+  const [stockData, setStockData] = useState<Stock[]>([]);
+  const [receivedValue, setReceivedValue] = useState<string | null>(null);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
@@ -35,7 +47,6 @@ const GamePage = () => {
       onClose: (event) => {
         console.log("Disconnected from WebSocket", event);
         if (event.code !== 1000) {
-          // 1000 means normal closure
           console.error("Unexpected disconnection");
         }
       },
@@ -71,7 +82,7 @@ const GamePage = () => {
         setNextGameCountdown((prevCountdown) => {
           if (prevCountdown && prevCountdown <= 1) {
             clearInterval(countdownTimer);
-            setNextGameCountdown(null); // Reset countdown after it reaches 0
+            setNextGameCountdown(null);
           }
           return prevCountdown ? prevCountdown - 1 : null;
         });
@@ -122,7 +133,7 @@ const GamePage = () => {
             if (data.payload.includes("Next game will start in")) {
               const countdownSeconds = 20;
               setNextGameCountdown(countdownSeconds);
-              setGameEnded(true); // Set this to true to hide ongoing message
+              setGameEnded(true);
             }
             break;
           case "connected":
@@ -139,9 +150,14 @@ const GamePage = () => {
     }
   }, [lastMessage, gameStarted, gameEnded]);
 
+  const handleValueReceived = (transaction: { symbol: string; quantity: number }) => {
+    setReceivedValue(`Bought ${transaction.quantity} of ${transaction.symbol}`);
+    console.log(`Transaction received: ${transaction.quantity} units of ${transaction.symbol}`);
+    // You can further process the transaction here
+  };
+
   return (
     <div className="flex flex-col h-screen">
-      {/* Header */}
       <header className="bg-space-cadet shadow-md shadow-slate-gray p-4 flex items-center justify-between text-white fixed w-full z-10">
         <div className="flex items-center ml-2">
           <img
@@ -176,11 +192,7 @@ const GamePage = () => {
         </div>
       </header>
 
-      {/* Main content with leaderboard */}
       <div className="flex flex-grow pt-24">
-        {" "}
-        {/* Added padding-top to accommodate the fixed header */}
-        {/* Main content */}
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
             <div className="text-center">
@@ -197,7 +209,7 @@ const GamePage = () => {
               </h1>
             </div>
           ) : (
-            <StockTable stocks={stockData} />
+            <StockTable stocks={stockData} onTransaction={handleValueReceived} />
           )}
         </div>
       </div>

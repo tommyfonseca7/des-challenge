@@ -1,3 +1,4 @@
+// StockTable.tsx
 import React, { useState } from "react";
 import {
   Table,
@@ -17,18 +18,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function StockTable({ stocks }) {
-  const [selectedQuantities, setSelectedQuantities] = useState({});
+// Define the Stock type
+interface Stock {
+  symbol: string;
+  company: string;
+  description: string;
+  price: number;
+}
 
-  const handleQuantityChange = (symbol, value) => {
-    setSelectedQuantities((prev) => ({ ...prev, [symbol]: value }));
+// Define props for the StockTable component
+interface StockTableProps {
+  stocks: Stock[];
+  onTransaction: (transaction: { symbol: string; quantity: number }) => void; // Callback function to handle the value
+}
+
+const StockTable: React.FC<StockTableProps> = ({ stocks, onTransaction }) => {
+  const [selectedQuantities, setSelectedQuantities] = useState<Record<string, number>>({});
+
+  const handleQuantityChange = (symbol: string, value: string) => {
+    setSelectedQuantities((prev) => ({ ...prev, [symbol]: parseInt(value, 10) }));
   };
 
-  const handleBuyClick = (symbol) => {
-    const quantity = selectedQuantities[symbol];
+  const handleBuyClick = (stock: Stock) => {
+    const quantity = selectedQuantities[stock.symbol];
     if (quantity) {
-      alert(`You have selected to buy ${quantity} units of ${symbol}.`);
-      // Proceed with buy action
+      alert(`You have selected to buy ${quantity} units of ${stock.symbol}.`);
+      // Call the onTransaction callback with transaction details
+      onTransaction({ symbol: stock.symbol, quantity });
     } else {
       alert("Please select a quantity before buying.");
     }
@@ -38,7 +54,7 @@ function StockTable({ stocks }) {
     <div className="flex justify-center items-center w-full h-full px-10 py-5">
       <div className="w-full h-full overflow-y-auto">
         <Table className="min-w-full">
-          <TableCaption></TableCaption>
+          <TableCaption>Stocks</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Symbol</TableHead>
@@ -55,14 +71,10 @@ function StockTable({ stocks }) {
                 <TableCell className="font-medium">{stock.symbol}</TableCell>
                 <TableCell>{stock.company}</TableCell>
                 <TableCell>{stock.description}</TableCell>
-                <TableCell className="text-right">
-                  ${stock.price.toFixed(2)}
-                </TableCell>
+                <TableCell className="text-right">${stock.price.toFixed(2)}</TableCell>
                 <TableCell>
                   <Select
-                    onValueChange={(value) =>
-                      handleQuantityChange(stock.symbol, value)
-                    }
+                    onValueChange={(value) => handleQuantityChange(stock.symbol, value)}
                   >
                     <SelectTrigger className="w-[100px]">
                       <SelectValue placeholder="--/--" />
@@ -77,7 +89,7 @@ function StockTable({ stocks }) {
                 <TableCell className="text-center">
                   <Button
                     className="m-1 bg-green-500 text-center"
-                    onClick={() => handleBuyClick(stock.symbol)}
+                    onClick={() => handleBuyClick(stock)}
                   >
                     Buy
                   </Button>
@@ -90,6 +102,6 @@ function StockTable({ stocks }) {
       </div>
     </div>
   );
-}
+};
 
 export default StockTable;
