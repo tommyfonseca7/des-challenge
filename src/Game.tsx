@@ -1,17 +1,48 @@
-function Game() {
-    const net_worth = 10000;
-    const round = 1;
-  return (
-    <>
-      <div className="mb-10 w-full fixed top-0 left-0 bg-white shadow-md text-green-500 p-5">
-        <h1 className="text-xl font-bold text-left">🤑 Stock Master</h1>
-      </div>
-      <div className="mt-24 w-1/2 text-black p-5">
-        <h3 className="text-xl font-bold text-left">Networth: {net_worth}</h3>
-        <h3 className="text-xl font-bold text-left">Round: {round}/10</h3>
-      </div>
-    </>
-  )
-}
+import React from "react";
 
-export default Game
+const GamePage = () => {
+  return (
+    <div className="flex h-screen">
+      {/* Main content */}
+      <div style={{ width: "85%" }} className="flex flex-col">
+        {/* Header */}
+        <header className="bg-space-cadet shadow-md shadow-slate-gray p-4 flex items-center justify-between text-white">
+          <div className="flex items-center ml-2">
+            <img
+              src="./src/assets/logo-dark-bg.png"
+              alt="Logo"
+              className="w-20 h-auto"
+            />
+            <div className="ml-10">
+              <span className="text-lg font-bold block">Welcome, username</span>
+              <a href="#" className="text-blue-500 underline block">
+                Leave the Game
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col items-center mr-12">
+            <span className="text-lg block">Available Funds: $10,000</span>
+            <span className="text-lg block">Net Worth: $15,000</span>
+          </div>
+          <div className="text-right mr-2">
+            <span className="text-2xl font-bold block">Rounds: 3/10</span>
+            <span className="text-lg block">Time Remaining: 10:00</span>
+          </div>
+        </header>
+
+        {/* Remaining space */}
+        <div className="flex-grow flex items-center justify-center">
+          <h1 className="text-3xl font-bold">Table</h1>
+        </div>
+      </div>
+
+      {/* Aside for leaderboard */}
+      <aside style={{ width: "15%" }} className="bg-slate-gray p-4 text-white">
+        <h2 className="text-xl font-bold">Leaderboard</h2>
+        <p>Leaderboard content goes here...</p>
+      </aside>
+    </div>
+  );
+};
+
+export default GamePage;
