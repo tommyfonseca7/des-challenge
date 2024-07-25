@@ -5,7 +5,6 @@ import StockTable from "./components/ui/StockTable";
 import Leaderboard from "./components/ui/Leaderboard";
 
 const GamePage = () => {
-
   const location = useLocation();
   const userData = location.state?.userData;
 
@@ -103,7 +102,6 @@ const GamePage = () => {
               setRound("--");
               setTimeRemaining(10);
               setStockData(data.payload);
-
             } else {
               setGameOngoingMessage(true);
             }
@@ -144,7 +142,7 @@ const GamePage = () => {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="bg-space-cadet shadow-md shadow-slate-gray p-4 flex items-center justify-between text-white">
+      <header className="bg-space-cadet shadow-md shadow-slate-gray p-4 flex items-center justify-between text-white fixed w-full z-10">
         <div className="flex items-center ml-2">
           <img
             src="./src/assets/logo-dark-bg.png"
@@ -179,7 +177,9 @@ const GamePage = () => {
       </header>
 
       {/* Main content with leaderboard */}
-      <div className="flex flex-grow">
+      <div className="flex flex-grow pt-24">
+        {" "}
+        {/* Added padding-top to accommodate the fixed header */}
         {/* Main content */}
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
@@ -197,13 +197,8 @@ const GamePage = () => {
               </h1>
             </div>
           ) : (
-            <StockTable stocks={stockData}/>
+            <StockTable stocks={stockData} />
           )}
-        </div>
-
-        {/* Leaderboard */}
-        <div>
-          <Leaderboard />
         </div>
       </div>
     </div>
