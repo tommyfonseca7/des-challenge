@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Input } from "./components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -34,14 +35,32 @@ function Login() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (data.username.charAt(0) === "T") {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const response = await fetch(
+        "http://summercamp24.ddns.net:4000/game/register-player",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: data.username }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+
+      navigate("/game", { state: { userData: responseData } });
+    } catch (error) {
       toast({
-        title: "Please wait a few minutes",
-        description: "A game is already occurring",
+        title: "Error",
+        description: "Failed to register player",
       });
-    } else {
-      navigate("/game");
+      console.error("Failed to register player:", error);
     }
   }
 
@@ -82,8 +101,8 @@ function Login() {
                       <FormMessage />
                       <FormDescription>
                         Stock Master is a stock simulator based game where users
-                        get to experiencie the ups and downs of the stock
-                        martket. Enter your name and join!
+                        get to experience the ups and downs of the stock market.
+                        Enter your name and join!
                       </FormDescription>
                     </FormItem>
                   )}
