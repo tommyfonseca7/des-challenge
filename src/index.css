@@ -95,6 +95,13 @@
   animation: fadeOut 0.5s forwards;
 }
 
+.scrollable-table-container {
+  display: flex;
+  flex-direction: column;
+  height: 75ph; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
