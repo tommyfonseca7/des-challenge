@@ -19,14 +19,9 @@ const router = createBrowserRouter([
   },
   {
     path: "/game",
-<<<<<<< HEAD
-    element: <Game />
-  }
-=======
     element: <Game />,
   },
 
->>>>>>> origin/main
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
