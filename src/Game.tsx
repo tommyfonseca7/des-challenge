@@ -1,4 +1,5 @@
 import React from "react";
+import Chat from "./Chat";
 
 const GamePage = () => {
   return (
@@ -41,6 +42,8 @@ const GamePage = () => {
         <h2 className="text-xl font-bold">Leaderboard</h2>
         <p>Leaderboard content goes here...</p>
       </aside>
+
+      <Chat />
     </div>
   );
 };
