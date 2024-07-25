@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import StockTable from "./components/ui/StockTable";
 
 const GamePage = () => {
   const location = useLocation();
@@ -139,13 +140,39 @@ const GamePage = () => {
         <div className="flex-grow flex items-center justify-center">
           <h1 className="text-3xl font-bold">Table</h1>
         </div>
+        <div className="flex flex-col items-center mr-12">
+          <span className="text-lg block">Available Funds: $10,000</span>
+          <span className="text-lg block">Net Worth: $15,000</span>
+        </div>
+        <div className="text-right mr-2">
+          <span className="text-2xl font-bold block">Rounds: 3/10</span>
+          <span className="text-lg block">Time Remaining: 10:00</span>
+        </div>
+
+      {/* Main content */}
+      <div className="flex flex-grow">
+        <div className="flex-grow flex flex-col">
+          {/* Remaining space */}
+          <div className="flex-grow flex items-center justify-center">
+          </div>
+        </div>
+
+        {/* Aside for leaderboard */}
+        <aside className="m-3 bg-slate-gray rounded p-4 text-white w-1/4">
+          <h2 className="text-xl text-center bg-space-cadet font-bold">Leaderboard</h2>
+          <p>Leaderboard content goes here...</p>
+        </aside>
       </div>
+<<<<<<< HEAD
 
       {/* Aside for leaderboard */}
       <aside style={{ width: "15%" }} className="bg-slate-gray p-4 text-white">
         <h2 className="text-xl font-bold">Leaderboard</h2>
         <p>Leaderboard content goes here...</p>
       </aside>
+=======
+    </div>
+>>>>>>> macedo-branch
     </div>
   );
 };
