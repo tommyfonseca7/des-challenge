@@ -4,11 +4,12 @@ import { Input } from "./components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,6 +19,8 @@ import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
 function Login() {
+  const navigate = useNavigate();
+
   const FormSchema = z.object({
     username: z.string().min(2, {
       message: "Username must be at least 2 characters.",
@@ -38,11 +41,7 @@ function Login() {
         description: "A game is already occurring",
       });
     } else {
-      toast({
-        title: "You should be redirected to the Game Page",
-        description: "🙃",
-      });
-      
+      navigate("/game");
     }
   }
 
@@ -71,14 +70,21 @@ function Login() {
                   name="username"
                   render={({ field }) => (
                     <FormItem className="flex flex-col space-y-2">
-                      <FormLabel className="text-left my-2 text-xl font-bold">Insert your name</FormLabel>
+                      <FormLabel className="text-left my-2 text-xl font-bold">
+                        Enter your name
+                      </FormLabel>
                       <div className="flex items-center space-x-4">
                         <FormControl className="flex-grow">
-                          <Input placeholder="Username" {...field} />
+                          <Input placeholder="Name" {...field} />
                         </FormControl>
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">Join!</Button>
                       </div>
                       <FormMessage />
+                      <FormDescription>
+                        Stock Master is a stock simulator based game where users
+                        get to experiencie the ups and downs of the stock
+                        martket. Enter your name and join!
+                      </FormDescription>
                     </FormItem>
                   )}
                 />
