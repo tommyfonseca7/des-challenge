@@ -8,12 +8,12 @@ const GamePage = () => {
     { name: "Player 1", netWorth: "$15,000", rank: 1 },
     { name: "Player 2", netWorth: "$12,000", rank: 2 },
     { name: "Player 3", netWorth: "$10,000", rank: 3 },
-    { name: "Player 3", netWorth: "$10,000", rank: 3 },
-    { name: "Player 3", netWorth: "$10,000", rank: 3 },
-    { name: "Player 3", netWorth: "$10,000", rank: 3 },
-    { name: "Player 3", netWorth: "$10,000", rank: 3 },
-    { name: "Player 3", netWorth: "$10,000", rank: 3 },
-    { name: "Player 3", netWorth: "$10,000", rank: 3 },
+    { name: "Player 4", netWorth: "$10,000", rank: 4 },
+    { name: "Player 5", netWorth: "$10,000", rank: 5 },
+    { name: "Player 6", netWorth: "$10,000", rank: 6 },
+    { name: "Player 7", netWorth: "$10,000", rank: 7 },
+    { name: "Player 8", netWorth: "$10,000", rank: 8 },
+    { name: "Player 9", netWorth: "$10,000", rank: 9 },
   ];
 
   const location = useLocation();
@@ -22,6 +22,7 @@ const GamePage = () => {
   const [round, setRound] = useState("--");
   const [gameStarted, setGameStarted] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(10);
+  const [stockData, setStockData] = useState([])
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
@@ -92,6 +93,9 @@ const GamePage = () => {
             setRound("--");
             setTimeRemaining(10);
             break;
+          case "round-started":
+            setStockData(data.payload);
+            break;
           default:
             break;
         }
@@ -120,8 +124,8 @@ const GamePage = () => {
             className="w-20 h-auto"
           />
           <div className="ml-10">
-            <span className="text-lg font-bold block">Welcome, {userData?.nam}</span>
-            <a href="#" className="text-blue-500 underline block">
+            <span className="text-lg font-bold block">Welcome, {userData?.name}</span>
+            <a href="/" className="text-blue-500 underline block">
               Leave the Game
             </a>
           </div>
@@ -139,8 +143,8 @@ const GamePage = () => {
       {/* Main content with leaderboard */}
       <div className="flex flex-grow">
         {/* Main content */}
-        <div className="flex-grow flex items-center justify-center">
-          <StockTable />
+        <div style={{width:"85%"}} className="flex-grow flex mt-4 ml-5">
+          <StockTable stocks={stockData}/>
         </div>
 
         {/* Leaderboard */}
