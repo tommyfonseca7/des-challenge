@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import StockTable from "./components/ui/StockTable";
 import Leaderboard from "./components/ui/Leaderboard";
+import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const GamePage = () => {
 
@@ -18,6 +20,7 @@ const GamePage = () => {
   const [gameOngoingMessage, setGameOngoingMessage] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [stockData, setStockData] = useState([]);
+  const [savedWallet, setWallet] = useState([]);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
@@ -102,8 +105,8 @@ const GamePage = () => {
               setGameOngoingMessage(false);
               setRound("--");
               setTimeRemaining(10);
+              fetchWallet()
               setStockData(data.payload);
-
             } else {
               setGameOngoingMessage(true);
             }
@@ -132,6 +135,9 @@ const GamePage = () => {
               setGameOngoingMessage(true);
             }
             break;
+          case "Transaction":
+            fetchWallet();
+            break;
           default:
             break;
         }
@@ -140,6 +146,34 @@ const GamePage = () => {
       }
     }
   }, [lastMessage, gameStarted, gameEnded]);
+
+  async function fetchWallet() {
+    try {
+      const response = await fetch(
+        `http://summercamp24.ddns.net:4000/game/player/${userData.id}/wallet`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const responseData = await response.json();
+      const {wallet} = responseData;
+      if (wallet) {
+        setWallet(wallet);
+      } 
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch wallet",
+      });
+      console.error("Failed to fetch wallet:", error);
+    }
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -197,7 +231,7 @@ const GamePage = () => {
               </h1>
             </div>
           ) : (
-            <StockTable stocks={stockData}/>
+            <StockTable stocks={stockData} wallet={savedWallet}/>
           )}
         </div>
 
@@ -206,6 +240,7 @@ const GamePage = () => {
           <Leaderboard />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

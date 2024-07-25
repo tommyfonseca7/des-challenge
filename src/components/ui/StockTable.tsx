@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function StockTable({ stocks }) {
+function StockTable({ stocks, wallet }) {
   const [selectedQuantities, setSelectedQuantities] = useState({});
 
 
@@ -33,7 +33,21 @@ function StockTable({ stocks }) {
     } else {
       alert("Please select a quantity before buying.");
     }
-};
+  };
+
+  const handleSellClick = (symbol) => {
+    const quantity = selectedQuantities[symbol];
+    if (quantity) {
+      alert(`You have selected to buy ${quantity} units of ${symbol}.`);
+      // Proceed with buy action
+    } else {
+      alert("Please select a quantity before buying.");
+    }
+  };
+
+  const isInWallet = (symbol) => {
+    return wallet.includes(symbol);
+  };
 
   return (
     <div className="flex justify-center items-center h-full w-full overflow-y-auto">
@@ -79,7 +93,14 @@ function StockTable({ stocks }) {
                 >
                   Buy
                 </Button>
-                <Button className="m-1 bg-red-500 text-center">Sell</Button>
+                {isInWallet(stock.symbol) && (
+                  <Button
+                    className="m-1 bg-red-500 text-center"
+                    onClick={() => handleSellClick(stock)}
+                  >
+                    Sell
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}
