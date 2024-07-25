@@ -145,14 +145,6 @@ const GamePage = () => {
     }
   }, [lastMessage, gameStarted, gameEnded]);
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
