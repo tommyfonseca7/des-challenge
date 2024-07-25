@@ -6,7 +6,6 @@ import Leaderboard from "./components/ui/Leaderboard";
 
 const GamePage = () => {
 
-
   const location = useLocation();
   const userData = location.state?.userData;
 
@@ -18,6 +17,8 @@ const GamePage = () => {
   );
   const [gameOngoingMessage, setGameOngoingMessage] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+  const [stockData, setStockData] = useState([]);
+
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
     {
@@ -101,6 +102,8 @@ const GamePage = () => {
               setGameOngoingMessage(false);
               setRound("--");
               setTimeRemaining(10);
+              setStockData(data.payload);
+
             } else {
               setGameOngoingMessage(true);
             }
@@ -128,6 +131,8 @@ const GamePage = () => {
             if (!gameStarted && !gameEnded) {
               setGameOngoingMessage(true);
             }
+            break;
+          default:
             break;
         }
       } catch (error) {
@@ -192,7 +197,7 @@ const GamePage = () => {
               </h1>
             </div>
           ) : (
-            <StockTable />
+            <StockTable stocks={stockData}/>
           )}
         </div>
 
