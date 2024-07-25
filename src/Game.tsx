@@ -99,7 +99,6 @@ const GamePage = () => {
             if (gameStarted && gameEnded) {
               setGameStarted(true);
               setGameOngoingMessage(false);
-              setRound("--");
               setTimeRemaining(10);
               setStockData(data.payload);
             } else {
@@ -122,7 +121,7 @@ const GamePage = () => {
             if (data.payload.includes("Next game will start in")) {
               const countdownSeconds = 20;
               setNextGameCountdown(countdownSeconds);
-              setGameEnded(true); // Set this to true to hide ongoing message
+              setGameEnded(true);
             }
             break;
           case "connected":
@@ -141,7 +140,6 @@ const GamePage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Header */}
       <header className="bg-space-cadet shadow-md shadow-slate-gray p-4 flex items-center justify-between text-white fixed w-full z-10">
         <div className="flex items-center ml-2">
           <img
@@ -176,11 +174,7 @@ const GamePage = () => {
         </div>
       </header>
 
-      {/* Main content with leaderboard */}
       <div className="flex flex-grow pt-24">
-        {" "}
-        {/* Added padding-top to accommodate the fixed header */}
-        {/* Main content */}
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
             <div className="text-center">
