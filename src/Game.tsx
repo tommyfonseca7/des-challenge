@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import StockTable from "./components/ui/StockTable";
-import Leaderboard from "./components/ui/Leaderboard";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import Chat from "./Chat";
@@ -22,7 +21,7 @@ const GamePage = () => {
   const [stockData, setStockData] = useState([]);
   const [savedWallet, setWallet] = useState([]);
 
-  const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
+  const { sendMessage, lastMessage, getWebSocket } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
     {
       onOpen: () => {
@@ -46,7 +45,7 @@ const GamePage = () => {
       onError: (event) => {
         console.error("WebSocket error:", event);
       },
-      shouldReconnect: (closeEvent) => true,
+      shouldReconnect: () => true,
     }
   );
 

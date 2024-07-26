@@ -1,4 +1,10 @@
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
+import type React from "react";
+import {
+  useState,
+  useEffect,
+  type ChangeEvent,
+  type KeyboardEvent,
+} from "react";
 
 interface ChatMessageDTO {
   senderId: string;
@@ -113,21 +119,21 @@ const Chat: React.FC<ChatProps> = ({ player, socket }) => {
     const player = players.find((p) => p.id === senderId);
     if (player) {
       return player.name;
-    } else {
-      // Fetch the updated player list if the sender's name is not found
-      if (socket) {
-        socket.send(JSON.stringify({ event: "enter-chat", data: player }));
-      }
-      return "Unknown Player"; // Fallback to "Unknown Player" if name is not found
     }
+    if (socket) {
+      socket.send(JSON.stringify({ event: "enter-chat", data: player }));
+    }
+    return "Unknown Player";
   };
 
   return (
     <div className="fixed bottom-4 right-4 flex flex-col items-end">
       <button
+        type="submit"
         onClick={toggleChat}
         className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg focus:outline-none"
       >
+        {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -149,6 +155,7 @@ const Chat: React.FC<ChatProps> = ({ player, socket }) => {
           <div className="bg-blue-500 text-white p-4 rounded-t-lg flex justify-between items-center">
             <h2 className="text-lg">Live Chat</h2>
             <button
+              type="submit"
               onClick={handleLeaveChat}
               className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
             >
@@ -160,6 +167,7 @@ const Chat: React.FC<ChatProps> = ({ player, socket }) => {
               <div className="text-gray-500 text-sm">No messages yet...</div>
             ) : (
               messages.map((message, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <div key={index} className="text-gray-800 mb-2">
                   <strong>
                     {message.senderId === player.id
@@ -200,6 +208,7 @@ const Chat: React.FC<ChatProps> = ({ player, socket }) => {
                 placeholder="Type a message..."
               />
               <button
+                type="submit"
                 onClick={handleSendMessage}
                 className="ml-2 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md focus:outline-none"
               >
@@ -207,6 +216,7 @@ const Chat: React.FC<ChatProps> = ({ player, socket }) => {
               </button>
             </div>
             <button
+              type="submit"
               onClick={handleClearChat}
               className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded mt-2"
             >
