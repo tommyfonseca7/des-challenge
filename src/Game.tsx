@@ -20,6 +20,7 @@ const GamePage = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [stockData, setStockData] = useState([]);
   const [savedWallet, setWallet] = useState([]);
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
   const { sendMessage, lastMessage, getWebSocket } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
@@ -120,6 +121,7 @@ const GamePage = () => {
             setRound("--");
             setTimeRemaining(10);
             setGameEnded(true);
+            setLeaderboardData(data.payload);
             break;
           case "message":
             if (data.payload.includes("Next game will start in")) {
@@ -214,11 +216,19 @@ const GamePage = () => {
       <div className="flex flex-grow pt-24">
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
-            <div className="text-center">
-              <h1 className="text-3xl font-bold">
-                A game is about to start in: {nextGameCountdown}s
-              </h1>
-              <div className="mt-4 mx-auto w-16 h-16 border-4 border-t-4 border-t-sky-blue border-space-cadet rounded-full animate-spin" />
+            <div className="text-center flex flex-col items-center min-h-screen py-4">
+              <div className="mt-10 mb-20 w-full">
+                <h1 className="text-3xl font-bold mb-2">
+                  Last game's results:
+                </h1>
+                <Leaderboard leaderboardData={leaderboardData}/>
+              </div>
+              <div className="mb-20 w-full">
+                <h1 className="text-3xl font-bold mb-4">
+                  A new game will start in: {nextGameCountdown}s
+                </h1>
+                <div className="mx-auto w-16 h-16 border-4 border-t-4 border-t-sky-blue border-space-cadet rounded-full animate-spin" />
+              </div>
             </div>
           ) : gameOngoingMessage ? (
             <div className="text-center">
