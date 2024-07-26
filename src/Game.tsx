@@ -5,6 +5,7 @@ import StockTable from "./components/ui/StockTable";
 import Leaderboard from "./components/ui/Leaderboard";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import Chat from "./Chat";
 
 const GamePage = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const GamePage = () => {
   const [stockData, setStockData] = useState([]);
   const [savedWallet, setWallet] = useState([]);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(
+  const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
     {
       onOpen: () => {
@@ -103,7 +104,7 @@ const GamePage = () => {
               setGameStarted(true);
               setGameOngoingMessage(false);
               setTimeRemaining(10);
-              fetchWallet()
+              fetchWallet();
               setStockData(data.payload);
             } else {
               setGameOngoingMessage(true);
@@ -153,17 +154,17 @@ const GamePage = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-          }
+          },
         }
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
-      const {wallet} = responseData;
+      const { wallet } = responseData;
       if (wallet) {
         setWallet(wallet);
-      } 
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -172,6 +173,8 @@ const GamePage = () => {
       console.error("Failed to fetch wallet:", error);
     }
   }
+
+  const webSocketInstance = getWebSocket();
 
   return (
     <div className="flex flex-col h-screen">
@@ -226,10 +229,13 @@ const GamePage = () => {
               </h1>
             </div>
           ) : (
-            <StockTable stocks={stockData} wallet={savedWallet}/>
+            <StockTable stocks={stockData} wallet={savedWallet} />
           )}
         </div>
       </div>
+      {webSocketInstance instanceof WebSocket && (
+        <Chat player={userData} socket={webSocketInstance as WebSocket} />
+      )}
       <Toaster />
     </div>
   );
