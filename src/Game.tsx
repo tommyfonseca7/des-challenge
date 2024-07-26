@@ -5,6 +5,7 @@ import StockTable from "./components/ui/StockTable";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import Chat from "./Chat";
+import Leaderboard from "./components/ui/Leaderboard";
 
 const GamePage = () => {
   const location = useLocation();
@@ -221,7 +222,7 @@ const GamePage = () => {
                 <h1 className="text-3xl font-bold mb-2">
                   Last game's results:
                 </h1>
-                <Leaderboard leaderboardData={leaderboardData}/>
+                <Leaderboard leaderboardData={leaderboardData} />
               </div>
               <div className="mb-20 w-full">
                 <h1 className="text-3xl font-bold mb-4">
