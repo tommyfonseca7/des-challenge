@@ -8,7 +8,7 @@ function Leaderboard({ leaderboardData }) {
   const rankedData = sortedData.map((player: any, index: number) => ({...player, rank: index + 1,}));
 
   return (
-      <div style={{ width: "40vw", height: "40vh" }} className="bg-misty-rose p-4 text-black mt-10 rounded-2xl border-4 border-misty-rose overflow-y-auto custom-scrollbar">
+      <div style={{ width: "40vw", height: "36vh" }} className="bg-misty-rose p-4 text-black mt-10 rounded-2xl border-8 border-misty-rose overflow-y-auto custom-scrollbar">
         <h2 className="text-2xl font-semibold text-space-cadet border-b-2 border-space-cadet pb-2 text-center">
           Leaderboard
         </h2>

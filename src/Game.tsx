@@ -179,15 +179,15 @@ const GamePage = () => {
       <div className="flex flex-grow pt-24">
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
-            <div className="text-center flex flex-col items-center justify-between min-h-screen">
-              <div className="mt-12 w-full">
+            <div className="text-center flex flex-col items-center min-h-screen py-4">
+              <div className="mt-10 mb-20 w-full">
                 <h1 className="text-3xl font-bold mb-2">
                   Last game's results:
                 </h1>
-                <Leaderboard leaderboardData={leaderboardData}/> {/* Pass leaderboard data here */}
+                <Leaderboard leaderboardData={leaderboardData}/>
               </div>
               <div className="mb-20 w-full">
-                <h1 className="text-3xl font-bold mb-2">
+                <h1 className="text-3xl font-bold mb-4">
                   A new game will start in: {nextGameCountdown}s
                 </h1>
                 <div className="mx-auto w-16 h-16 border-4 border-t-4 border-t-sky-blue border-space-cadet rounded-full animate-spin" />
