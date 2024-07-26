@@ -45,8 +45,8 @@ function StockTable({ stocks, wallet }) {
   };
 
   const isInWallet = (symbol) => {
-    return wallet.includes(symbol);
-  };
+    return wallet.some((stock) => stock.symbol === symbol);
+  }
 
   return (
     <div className="flex justify-center items-center w-full h-full px-10 py-5">
