@@ -1,16 +1,20 @@
 // GamePage.tsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import useWebSocket from "react-use-websocket";
-import StockTable from "./components/ui/StockTable"; // Adjust the import path as needed
-import Leaderboard from "./components/ui/Leaderboard"; // Adjust the import path as needed
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import StockTable from "./components/ui/StockTable";
+import Leaderboard from "./components/ui/Leaderboard";
+import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 interface UserData {
+  id: string
   name: string;
   netWorth: number;
 }
 
 interface Stock {
+  id: string
   symbol: string;
   company: string;
   description: string;
@@ -21,14 +25,18 @@ const GamePage: React.FC = () => {
   const location = useLocation();
   const userData = location.state?.userData as UserData;
 
-  const [round, setRound] = useState<string>("--");
-  const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [timeRemaining, setTimeRemaining] = useState<number>(10);
-  const [nextGameCountdown, setNextGameCountdown] = useState<number | null>(null);
-  const [gameOngoingMessage, setGameOngoingMessage] = useState<boolean>(false);
-  const [gameEnded, setGameEnded] = useState<boolean>(false);
-  const [stockData, setStockData] = useState<Stock[]>([]);
-  const [receivedValue, setReceivedValue] = useState<string | null>(null);
+  const [round, setRound] = useState("--");
+  const [gameStarted, setGameStarted] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(10);
+  const [nextGameCountdown, setNextGameCountdown] = useState<number | null>(
+    null
+  );
+  const [gameOngoingMessage, setGameOngoingMessage] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [stockData, setStockData] = useState([]);
+  const [savedWallet, setWallet] = useState([]);
+  const [receivedStock, setReceivedValueStock] = useState<Stock | null>(null);
+  const [receivedQuantity, setReceivedValueQuantity] = useState<number | null>(null);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
@@ -91,6 +99,27 @@ const GamePage: React.FC = () => {
     return () => clearInterval(countdownTimer);
   }, [nextGameCountdown]);
 
+
+  //Handle transaction function
+  useEffect(() => {
+    if (receivedStock != null && receivedQuantity != null){
+      fetchWallet();
+      console.log(receivedStock.id)
+      sendMessage(
+        JSON.stringify({
+          event: "Transaction",
+          data:{
+            playerId: userData.id,
+            stockId: receivedStock.id,
+            quantity: receivedQuantity,
+          }
+        })
+      );
+      setReceivedValueStock(null)
+      setReceivedValueQuantity(null)
+    }
+  }, [receivedStock, receivedQuantity])
+
   useEffect(() => {
     if (lastMessage !== null) {
       try {
@@ -110,8 +139,8 @@ const GamePage: React.FC = () => {
             if (gameStarted && gameEnded) {
               setGameStarted(true);
               setGameOngoingMessage(false);
-              setRound("--");
               setTimeRemaining(10);
+              fetchWallet()
               setStockData(data.payload);
             } else {
               setGameOngoingMessage(true);
@@ -141,6 +170,10 @@ const GamePage: React.FC = () => {
               setGameOngoingMessage(true);
             }
             break;
+          case "Transaction":
+            console.log("Received message:", data);
+            fetchWallet();
+            break;
           default:
             break;
         }
@@ -150,11 +183,39 @@ const GamePage: React.FC = () => {
     }
   }, [lastMessage, gameStarted, gameEnded]);
 
-  const handleValueReceived = (transaction: { symbol: string; quantity: number }) => {
-    setReceivedValue(`Bought ${transaction.quantity} of ${transaction.symbol}`);
-    console.log(`Transaction received: ${transaction.quantity} units of ${transaction.symbol}`);
+  const handleValueReceived = (transaction: { stock: Stock; quantity: number }) => {
+    setReceivedValueStock(transaction.stock);
+    setReceivedValueQuantity(transaction.quantity);
+    console.log(`Transaction received: ${transaction.quantity} units of ${transaction.stock.symbol}`);
     // You can further process the transaction here
   };
+  async function fetchWallet() {
+    try {
+      const response = await fetch(
+        `http://summercamp24.ddns.net:4000/game/player/${userData.id}/wallet`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const responseData = await response.json();
+      const {wallet} = responseData;
+      if (wallet) {
+        setWallet(wallet);
+      } 
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch wallet",
+      });
+      console.error("Failed to fetch wallet:", error);
+    }
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -209,10 +270,12 @@ const GamePage: React.FC = () => {
               </h1>
             </div>
           ) : (
-            <StockTable stocks={stockData} onTransaction={handleValueReceived} />
+            <StockTable stocks={stockData} wallet={savedWallet} onTransaction={handleValueReceived} />
+
           )}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
