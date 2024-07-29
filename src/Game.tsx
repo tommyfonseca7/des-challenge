@@ -13,7 +13,7 @@ const GamePage = () => {
 
   const [round, setRound] = useState("--");
   const [gameStarted, setGameStarted] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(10);
+  const [timeRemaining, setTimeRemaining] = useState(30);
   const [nextGameCountdown, setNextGameCountdown] = useState<number | null>(
     null
   );
@@ -58,13 +58,13 @@ const GamePage = () => {
         setTimeRemaining((prevTime) => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            return 10;
+            return 30;
           }
           return prevTime - 1;
         });
       }, 1000);
     } else {
-      setTimeRemaining(10);
+      setTimeRemaining(30);
     }
     return () => clearInterval(timer);
   }, [gameStarted, round]);
@@ -95,7 +95,7 @@ const GamePage = () => {
           case "round-ended":
             if (gameStarted) {
               setRound(data.payload);
-              setTimeRemaining(10);
+              setTimeRemaining(30);
             } else {
               setGameOngoingMessage(true);
             }
@@ -104,7 +104,7 @@ const GamePage = () => {
             if (gameStarted && gameEnded) {
               setGameStarted(true);
               setGameOngoingMessage(false);
-              setTimeRemaining(10);
+              setTimeRemaining(30);
               fetchWallet();
               setStockData(data.payload);
             } else {
@@ -114,19 +114,19 @@ const GamePage = () => {
           case "game-started":
             setGameStarted(true);
             setRound("--");
-            setTimeRemaining(10);
+            setTimeRemaining(30);
             setGameOngoingMessage(false);
             break;
           case "game-ended":
             setGameStarted(false);
             setRound("--");
-            setTimeRemaining(10);
+            setTimeRemaining(30);
             setGameEnded(true);
             setLeaderboardData(data.payload);
             break;
           case "message":
             if (data.payload.includes("Next game will start in")) {
-              const countdownSeconds = 20;
+              const countdownSeconds = 60;
               setNextGameCountdown(countdownSeconds);
               setGameEnded(true);
             }
