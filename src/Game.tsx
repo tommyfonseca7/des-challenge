@@ -21,6 +21,7 @@ const GamePage = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [stockData, setStockData] = useState([]);
   const [savedWallet, setWallet] = useState([]);
+  const [savedNetWorth, setNetWorth] = useState(10000);
   const [leaderboardData, setLeaderboardData] = useState([]);
 
   const { sendMessage, lastMessage, getWebSocket } = useWebSocket(
@@ -160,7 +161,8 @@ const GamePage = () => {
         throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
-      const { wallet } = responseData;
+      const { wallet, netWorth } = responseData;
+      setNetWorth(netWorth);
       console.log("RESPONSE DATA: ", responseData);
       if (wallet) {
         setWallet(wallet);
@@ -196,10 +198,7 @@ const GamePage = () => {
         </div>
         <div className="flex flex-col items-center mr-12">
           <span className="text-lg block">
-            Available Funds: ${userData?.netWorth}
-          </span>
-          <span className="text-lg block">
-            Net Worth: ${userData?.netWorth}
+            Net Worth: ${savedNetWorth.toFixed(2)}
           </span>
         </div>
         <div className="text-right mr-2">
