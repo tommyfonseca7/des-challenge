@@ -17,18 +17,29 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function StockTable({ stocks, wallet }) {
+function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
   const [selectedQuantities, setSelectedQuantities] = useState({});
 
   const handleQuantityChange = (symbol, value) => {
     setSelectedQuantities((prev) => ({ ...prev, [symbol]: value }));
   };
 
-  const handleBuyClick = (symbol) => {
-    const quantity = selectedQuantities[symbol];
+  const handleBuyClick = (stock) => {
+    const quantity = selectedQuantities[stock.symbol];
     if (quantity) {
-      alert(`You have selected to buy ${quantity} units of ${symbol}.`);
-      // Proceed with buy action
+      const payload = {
+        playerId: userData.id,
+        stock: stock.id,
+        quantity: parseInt(quantity, 10),
+      }
+      console.log("PAYLOAD: ", payload);
+      ws(
+        JSON.stringify({
+          event: "transaction",
+          data: payload,
+        })
+      );
+      fetchWallet()
     } else {
       alert("Please select a quantity before buying.");
     }
@@ -91,7 +102,7 @@ function StockTable({ stocks, wallet }) {
                 <TableCell className="text-center">
                   <Button
                     className="m-1 bg-green-500 text-center"
-                    onClick={() => handleBuyClick(stock.symbol)}
+                    onClick={() => handleBuyClick(stock)}
                   >
                     Buy
                   </Button>
