@@ -133,9 +133,6 @@ const GamePage = () => {
               setGameOngoingMessage(true);
             }
             break;
-          case "Transaction":
-            fetchWallet();
-            break;
           default:
             break;
         }
@@ -161,6 +158,7 @@ const GamePage = () => {
       }
       const responseData = await response.json();
       const {wallet} = responseData;
+      console.log("RESPONSE DATA: ", responseData);
       if (wallet) {
         setWallet(wallet);
       } 
@@ -226,7 +224,7 @@ const GamePage = () => {
               </h1>
             </div>
           ) : (
-            <StockTable stocks={stockData} wallet={savedWallet}/>
+            <StockTable stocks={stockData} wallet={savedWallet} ws={sendMessage} userData={userData} fetchWallet={fetchWallet}/>
           )}
         </div>
       </div>
