@@ -95,8 +95,8 @@ const GamePage = () => {
         switch (data.type) {
           case "round-ended":
             if (gameStarted) {
-              setRound(data.payload);
-              setTimeRemaining(30);
+              setRound(data.payload+1);
+              setTimeRemaining(10);
             } else {
               setGameOngoingMessage(true);
             }
@@ -105,7 +105,8 @@ const GamePage = () => {
             if (gameStarted && gameEnded) {
               setGameStarted(true);
               setGameOngoingMessage(false);
-              setTimeRemaining(30);
+              setNextGameCountdown(null);
+              setTimeRemaining(10);
               fetchWallet();
               setStockData(data.payload);
             } else {
@@ -114,14 +115,14 @@ const GamePage = () => {
             break;
           case "game-started":
             setGameStarted(true);
-            setRound("--");
-            setTimeRemaining(30);
+            setRound("1");
+            setTimeRemaining(10);
             setGameOngoingMessage(false);
             break;
           case "game-ended":
             setGameStarted(false);
             setRound("--");
-            setTimeRemaining(30);
+            setTimeRemaining(10);
             setGameEnded(true);
             setLeaderboardData(data.payload);
             break;
@@ -202,7 +203,7 @@ const GamePage = () => {
           </span>
         </div>
         <div className="text-right mr-2">
-          <span className="text-2xl font-bold block">Rounds: {round}</span>
+          <span className="text-2xl font-bold block">Round: {round} / 10</span>
           {gameStarted && (
             <span className="text-lg block">
               Time Remaining: {timeRemaining}s
@@ -211,17 +212,17 @@ const GamePage = () => {
         </div>
       </header>
 
-      <div className="flex flex-grow pt-24">
+      <div className="flex flex-grow pt-24 min-h-screen">
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
-            <div className="text-center flex flex-col items-center min-h-screen py-4">
-              <div className="mt-10 mb-20 w-full">
+            <div className="text-center flex flex-col items-center py-4">
+              <div className="mt-10 mb-10 w-full">
                 <h1 className="text-3xl font-bold mb-2">
                   Last game's results:
                 </h1>
                 <Leaderboard leaderboardData={leaderboardData} />
               </div>
-              <div className="mb-20 w-full">
+              <div className="mb-5 w-full">
                 <h1 className="text-3xl font-bold mb-4">
                   A new game will start in: {nextGameCountdown}s
                 </h1>
