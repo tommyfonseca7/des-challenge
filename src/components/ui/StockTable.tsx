@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "./use-toast";
 
 function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
   const [selectedQuantities, setSelectedQuantities] = useState({});
@@ -31,7 +32,7 @@ function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
         playerId: userData.id,
         stock: stock.id,
         quantity: parseInt(quantity, 10),
-      }
+      };
       console.log("PAYLOAD: ", payload);
       ws(
         JSON.stringify({
@@ -39,7 +40,11 @@ function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
           data: payload,
         })
       );
-      fetchWallet()
+      fetchWallet();
+      toast({
+        title: "Stocks bought successfully!",
+        description: `Successfully bought ${payload.quantity} of ${stock.symbol}`,
+      });
     } else {
       alert("Please select a quantity before buying.");
     }
@@ -57,7 +62,7 @@ function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
 
   const isInWallet = (symbol) => {
     return wallet.some((stock) => stock.symbol === symbol);
-  }
+  };
 
   return (
     <div className="flex justify-center items-center w-full h-full px-10 py-5">
@@ -113,14 +118,14 @@ function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
                   >
                     Buy
                   </Button>
-                {isInWallet(stock.symbol) && (
+                  {isInWallet(stock.symbol) && (
                     <Button
-                    className="m-1 bg-red-500 text-center"
-                    onClick={() => handleSellClick(stock)}
-                  >
-                    Sell
-                  </Button>
-                )}
+                      className="m-1 bg-red-500 text-center"
+                      onClick={() => handleSellClick(stock)}
+                    >
+                      Sell
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

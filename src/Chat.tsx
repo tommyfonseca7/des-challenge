@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
 } from "react";
+import { toast } from "./components/ui/use-toast";
 
 interface ChatMessageDTO {
   senderId: string;
@@ -109,6 +110,9 @@ const Chat: React.FC<ChatProps> = ({ player, socket }) => {
       socket.send(JSON.stringify({ event: "leave-chat", data: player }));
     }
     setIsOpen(false);
+    toast({
+      title: "Left chat",
+    });
   };
 
   const handleClearChat = () => {
