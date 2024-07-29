@@ -1,11 +1,12 @@
 // GamePage.tsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import StockTable from "./components/ui/StockTable";
-import Leaderboard from "./components/ui/Leaderboard";
 import { toast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import Chat from "./Chat";
+import Leaderboard from "./components/ui/Leaderboard";
 
 interface UserData {
   id: string
@@ -37,8 +38,9 @@ const GamePage: React.FC = () => {
   const [savedWallet, setWallet] = useState([]);
   const [receivedStock, setReceivedValueStock] = useState<Stock | null>(null);
   const [receivedQuantity, setReceivedValueQuantity] = useState<number | null>(null);
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(
+  const { sendMessage, lastMessage, getWebSocket } = useWebSocket(
     "ws://summercamp24.ddns.net:4000",
     {
       onOpen: () => {
@@ -61,7 +63,7 @@ const GamePage: React.FC = () => {
       onError: (event) => {
         console.error("WebSocket error:", event);
       },
-      shouldReconnect: (closeEvent) => true,
+      shouldReconnect: () => true,
     }
   );
 
@@ -104,13 +106,21 @@ const GamePage: React.FC = () => {
   useEffect(() => {
     if (receivedStock != null && receivedQuantity != null){
       fetchWallet();
-      console.log(receivedStock.id)
+      const payload = {
+        event: "transaction",
+        data:{
+          playerId: userData.id,
+          stock: receivedStock.id,
+          quantity: receivedQuantity,
+        }
+      }
+      console.log(payload)
       sendMessage(
         JSON.stringify({
-          event: "Transaction",
+          event: "transaction",
           data:{
             playerId: userData.id,
-            stockId: receivedStock.id,
+            stock: receivedStock.id,
             quantity: receivedQuantity,
           }
         })
@@ -140,13 +150,19 @@ const GamePage: React.FC = () => {
               setGameStarted(true);
               setGameOngoingMessage(false);
               setTimeRemaining(10);
-              fetchWallet()
+              fetchWallet();
               setStockData(data.payload);
             } else {
               setGameOngoingMessage(true);
             }
             break;
           case "game-started":
+            sendMessage(
+            JSON.stringify({
+              event: "connect-confirm",
+              data: userData,
+            })
+          );
             setGameStarted(true);
             setRound("--");
             setTimeRemaining(10);
@@ -157,6 +173,7 @@ const GamePage: React.FC = () => {
             setRound("--");
             setTimeRemaining(10);
             setGameEnded(true);
+            setLeaderboardData(data.payload);
             break;
           case "message":
             if (data.payload.includes("Next game will start in")) {
@@ -170,8 +187,7 @@ const GamePage: React.FC = () => {
               setGameOngoingMessage(true);
             }
             break;
-          case "Transaction":
-            console.log("Received message:", data);
+          case "transaction":
             fetchWallet();
             break;
           default:
@@ -197,17 +213,19 @@ const GamePage: React.FC = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-          }
+          },
         }
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
-      const {wallet} = responseData;
+      console.log(responseData)
+      const { wallet } = responseData;
       if (wallet) {
         setWallet(wallet);
-      } 
+        console.log(wallet)
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -216,6 +234,8 @@ const GamePage: React.FC = () => {
       console.error("Failed to fetch wallet:", error);
     }
   }
+
+  const webSocketInstance = getWebSocket();
 
   return (
     <div className="flex flex-col h-screen">
@@ -256,11 +276,19 @@ const GamePage: React.FC = () => {
       <div className="flex flex-grow pt-24">
         <div className="flex-grow flex items-center justify-center">
           {nextGameCountdown !== null ? (
-            <div className="text-center">
-              <h1 className="text-3xl font-bold">
-                A game is about to start in: {nextGameCountdown}s
-              </h1>
-              <div className="mt-4 mx-auto w-16 h-16 border-4 border-t-4 border-t-sky-blue border-space-cadet rounded-full animate-spin" />
+            <div className="text-center flex flex-col items-center min-h-screen py-4">
+              <div className="mt-10 mb-20 w-full">
+                <h1 className="text-3xl font-bold mb-2">
+                  Last game's results:
+                </h1>
+                <Leaderboard leaderboardData={leaderboardData} />
+              </div>
+              <div className="mb-20 w-full">
+                <h1 className="text-3xl font-bold mb-4">
+                  A new game will start in: {nextGameCountdown}s
+                </h1>
+                <div className="mx-auto w-16 h-16 border-4 border-t-4 border-t-sky-blue border-space-cadet rounded-full animate-spin" />
+              </div>
             </div>
           ) : gameOngoingMessage ? (
             <div className="text-center">
@@ -275,6 +303,9 @@ const GamePage: React.FC = () => {
           )}
         </div>
       </div>
+      {webSocketInstance instanceof WebSocket && (
+        <Chat player={userData} socket={webSocketInstance as WebSocket} />
+      )}
       <Toaster />
     </div>
   );
