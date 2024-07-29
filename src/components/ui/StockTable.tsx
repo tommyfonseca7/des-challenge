@@ -29,12 +29,13 @@ function StockTable({ stocks, wallet, ws, userData, fetchWallet }) {
     if (quantity) {
       const payload = {
         playerId: userData.id,
-        stockId: stock.id,
+        stock: stock.id,
         quantity: parseInt(quantity, 10),
       }
+      console.log("PAYLOAD: ", payload);
       ws(
         JSON.stringify({
-          event: "Transaction",
+          event: "transaction",
           data: payload,
         })
       );
