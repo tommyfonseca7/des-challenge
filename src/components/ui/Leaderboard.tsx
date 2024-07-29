@@ -22,7 +22,7 @@ function Leaderboard({ leaderboardData }) {
             </span>
             <div className="flex flex-grow ml-4 justify-between">
               <span className="text-lg text-black">{player.name}</span>
-              <span className="text-lg text-black">{player.netWorth}</span>
+              <span className="text-lg text-black">{player.netWorth.toFixed(2)}</span>
             </div>
           </div>
         ))}
