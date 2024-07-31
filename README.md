@@ -1,30 +1,33 @@
-# React + TypeScript + Vite
+# Stock Simulator Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This applicatoin was developed while paricipating in a Summer InternShip @ Critical Software. 
 
-Currently, two official plugins are available:
+## Objective
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The main objective of this app was to emalute the stock market and to create a game where the users join by entering their name and buy stocks throughout a 10 rounds (30 seconds each), and try to be the ost profitable possible.
 
-## Expanding the ESLint configuration
+## Application 
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+This application is just the front-end of the Game. The backend was developed and deployd to a REST API and a Websocket to crate the communication with the client. With this said, unfortunnaly, the servers are no longer running and its not possible for the application to work all by itself, but the screens, logic and code are still available.
 
-- Configure the top-level `parserOptions` property like this:
+## Application Stack
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+The front-end was developed using Vite.js, React (Typescript), TailwindCss. For some UI components it was used the schadcn/ui library.
+
+## Installation
+1. Make sure you have Node.js installed.
+2. Clone the repository to a folder and enter it.
+3. Open the terminal and run the following command to install all dependecies
 ```
+npm install 
+```
+4. In the same terminal run the following command to start the development server
+```
+npm run dev 
+```
+5. Open the link showned in your browser and start playing!
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Contributors 
+ 
+This project was devolped by a group of 5 members. 
+@tommyfonseca7 contributions were the Landing Page, Login Page, part of the Game Page and the Chat component.
