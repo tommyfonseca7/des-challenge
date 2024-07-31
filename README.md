@@ -30,4 +30,4 @@ npm run dev
 ## Contributors 
  
 This project was devolped by a group of 5 members. 
-@tommyfonseca7 contributions were the Landing Page, Login Page, part of the Game Page and the Chat component.
+- @tommyfonseca7 contributions were the Landing Page, Login Page, part of the Game Page and the Chat component.
